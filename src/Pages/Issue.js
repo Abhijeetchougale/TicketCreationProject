@@ -143,7 +143,7 @@ const Issue = () => {
            
             <div className='d-flex justify-content-between'>
             <h2 className='text-center'>Create New Issue</h2>
-                <Button variant="primary" onClick={() => setShowModal(true)}>Create New</Button>
+                <Button variant="primary" onClick={() => setShowModal(true)}><FontAwesomeIcon icon={faPlus} />Create New</Button>
             </div>
             <div className="ag-theme-alpine" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact

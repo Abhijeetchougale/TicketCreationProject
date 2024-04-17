@@ -12,20 +12,16 @@
     "ag-grid-react": "^31.2.1",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "font-awesome": "^4.7.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-bootstrap-icons": "^1.11.4",
     "react-dom": "^18.2.0",
+    "react-icon": "^1.0.0",
     "react-icons": "^5.1.0",
     "react-router-dom": "^6.22.3",
-<<<<<<< HEAD
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "font-awesome": "^4.7.0"
-=======
-    "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
->>>>>>> a60a585cfb0827d2ccc6d1a22c7144bdfcb5d246
   },
   "scripts": {
     "start": "react-scripts start",
