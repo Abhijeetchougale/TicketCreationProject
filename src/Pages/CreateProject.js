@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { VALIDATIONERROR } from '../Core/Constant/Constant';
 import { getData, postData, updateData, deleteData } from '../Core/Services/Service';
-import { PencilSquare, Trash } from 'react-bootstrap-icons';
+import { PencilSquare, Trash,Plus } from 'react-bootstrap-icons';
 
 const CreateProject = () => {
     const getURL_END = 'GetAllProject';
@@ -103,7 +103,7 @@ const CreateProject = () => {
                                         <h4 >Project List</h4>
                                     </div>
                                     <div className="col-md-2">
-                                        <button className='btn btn-success' onClick={handleShow} >Add New</button>
+                                        <button className='btn btn-success' onClick={handleShow} ><Plus/></button>
                                     </div>
                                 </div>
                             </div>
