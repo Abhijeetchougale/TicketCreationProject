@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { COMMON_URL } from '../utility/Constant';
+import { COMMON_URL } from '../Constant/Constant';
 
 export const getData = async (get) => {
     try {

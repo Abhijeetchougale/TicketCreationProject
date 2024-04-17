@@ -5,7 +5,7 @@ const Navbar = () => {
     return (
 
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-light bg-info">
                 <div className="container-fluid">
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -14,13 +14,22 @@ const Navbar = () => {
                         <Link className="navbar-brand" href="#">Nvabar brand</Link>
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link " to="" >Home</Link>
+                                <Link className="nav-link " to="./" >User</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="">Link</Link>
+                                <Link className="nav-link" to="./CreateProject">Create Project</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link " to="" ></Link>
+                                <Link className="nav-link " to="./Issue" >Issue</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link " to="./ProjectUser" >Project User</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link " to="./TicketType" >Ticket Type</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link " to="./TicketStatus" >Ticket Status</Link>
                             </li>
                         </ul>
                         <form className="d-flex">
