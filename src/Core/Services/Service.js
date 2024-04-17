@@ -1,41 +1,33 @@
-
-import axios from 'axios';
 import { COMMON_URL } from '../Constant/Constant';
+import axios from "axios";
 
-export const getData = async (get) => {
-    try {
-        const response = await axios.get(`${COMMON_URL}${get}`);
-        return response.data.data;
-    } catch (error) {
-        alert(error.message);
-    }
+const getData = async (endpoint) => {
+  try {
+    const result = await axios.get(`${COMMON_URL}${endpoint}`);
+    return result.data.data;
+  } catch (error) {
+    alert(error);
+  }
 };
 
-export const postData = async (endPOST_URL, obj) => {
-    try {
-        const response = await axios.post(`${COMMON_URL}${endPOST_URL}`, obj);
-        return response.data;
-    } catch (error) {
-        alert(error.message);
-    }
+const postData = async (endpoint, obj) => {
+  try {
+    const result = await axios.post(`${COMMON_URL}${endpoint}`, obj);
+    return result.data;
+  } catch (error) {
+    alert(error);
+  }
 };
 
-export const updateData = async (endUPDATE_URL, obj) => {
-    try {
-        const response = await axios.post(`${COMMON_URL}${endUPDATE_URL}`, obj);
-        return response.data;
-    } catch (error) {
-        alert(error.message);
-    }
+const deleteData = async (endpoint, id) => {
+  debugger;
+  try {
+    debugger;
+    const result = await axios.get(`${COMMON_URL}${endpoint}${id}`);
+    return result.data;
+  } catch (error) {
+    alert(error);
+  }
 };
 
-export const deleteData = async (endDELETE_URL, id) => {
-    try {
-        const response = await axios.get(`${COMMON_URL}${endDELETE_URL}${id}`);
-        return response.data;
-    } catch (error) {
-        alert(error.message);
-    }
-};
-
-
+export { getData, postData, deleteData };
