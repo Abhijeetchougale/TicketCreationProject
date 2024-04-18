@@ -6,9 +6,11 @@ import ProjectUser from './Pages/ProjectUser';
 import TicketStatus from './Pages/TicketStatus';
 import TicketType from './Pages/TicketType';
 import CreateProject from './Pages/CreateProject';
+import { Navbar } from 'react-bootstrap';
 function App() {
   return (
     <div className="App">
+      <Navbar/>
        <BrowserRouter>
             <Routes>
               <Route path="user" element={<User></User>}></Route>
