@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
 const Navbar = () => {
     return (
 
@@ -12,28 +13,28 @@ const Navbar = () => {
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                   
-                    <li className="nav-item">
-                      <Link className='nav-link' to="/user">User</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className='nav-link' to="/project">Project</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className='nav-link' to="/issues">Issues</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className='nav-link' to="/projectUser">ProjectUser</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className='nav-link' to="/ticketType">TicketType</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className='nav-link' to="/ticketStatus">TicketStatus</Link>
-                    </li>  
+                  <li className="nav-item">
+                    <Link className='nav-link' to="/user">User</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className='nav-link' to="/project">Project</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className='nav-link' to="/issues">Issues</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className='nav-link' to="/projectUser">ProjectUser</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className='nav-link' to="/ticketType">TicketType</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className='nav-link' to="/ticketStatus">TicketStatus</Link>
+                  </li>  
 
-                  </ul>
+                </ul>
                 </div>
               </div>
             </nav>

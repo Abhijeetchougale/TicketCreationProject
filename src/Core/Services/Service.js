@@ -1,6 +1,6 @@
-import { COMMON_URL } from '../Constant/Constant';
+import { COMMON_URL } from '../constant/Constant';
 import axios from "axios";
-import { UPDATE_USER } from '../Constant/Constant';
+import { UPDATE_USER } from '../constant/Constant';
 const getData = async (endpoint) => {
   try {
     const result = await axios.get(`${COMMON_URL}${endpoint}`);

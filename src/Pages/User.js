@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import Breadcrumb from "react-bootstrap/Breadcrumb";
+import { FaUserPlus } from "react-icons/fa";
+
 import {
   GET_ALL_ROLES,
   GET_ALL_USERS,
@@ -6,7 +9,7 @@ import {
   UPDATE_USER,
   DELETE_USER_BY_ID,
 } from "../Core/constant/Constant.js";
-import { deleteData, getData, postData } from '../services/Service.js';
+import { deleteData, getData, postData } from '../Core/Services/Service.js';
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { VALIDATION_REQUIRED } from "../Core/constant/Constant.js";
@@ -36,7 +39,14 @@ const User = () => {
 
   const getUsers = () => {
     getData(GET_ALL_USERS).then((result) => {
-      setUserList(result);
+      const usersWithSerialNumbers = addUserSerialNumbers(result);
+      setUserList(usersWithSerialNumbers);
+    });
+  };
+
+  const addUserSerialNumbers = (users) => {
+    return users.map((user, index) => {
+      return { ...user, Srno: index + 1 }; // Adding Srno property with index + 1
     });
   };
 
@@ -65,7 +75,11 @@ const User = () => {
     setModalIsOpen(false);
     resetUserData();
   };
-
+  const resetModal = () => {
+    resetUserData();
+    setIsFormSubmitted(false);
+  };
+  
   const updateFormValue = (event, key) => {
     setUserData((prevobj) => ({ ...prevobj, [key]: event.target.value }));
   };
@@ -167,20 +181,23 @@ const User = () => {
   };
 
   const [colDefs, setColDefs] = useState([
-    { field: "fullName" },
-    { field: "emailId" },
-    { field: "password" },
-    { field: "roleName" },
-    { field: "createdDate" },
-    { field: "technicalStack" },
-    { field: "isActive" },
-    { field: "Action", cellRenderer: CustomButtonComponent },
+    { headerName: "Sr. No", field: "Srno" }, // Adding Sr. No column
+    { headerName: "Full Name", field: "fullName" },
+    { headerName: "Email", field: "emailId" },
+    { headerName: "Role", field: "roleName" },
+    { headerName: "Technical Stack", field: "technicalStack" },
+    { headerName: "Is Active", field: "isActive" },
+    { headerName: "Action", cellRenderer: CustomButtonComponent },
   ]);
 
   return (
     <div>
       <div className="row mt-3">
         <div className="col-md-12">
+          <Breadcrumb>
+            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
+            <Breadcrumb.Item active>User List</Breadcrumb.Item>
+          </Breadcrumb>
           <div className="card bg-light my-2 mx-4">
             <div className="card-header bg-light">
               <div className="row mt-3">
@@ -189,7 +206,7 @@ const User = () => {
                 </div>
                 <div className="col-3">
                   <button className="btn btn-primary" onClick={openModal}>
-                    Add User
+                    <FaUserPlus className="mr-1" /> Add User
                   </button>
                 </div>
               </div>
@@ -205,6 +222,9 @@ const User = () => {
                   pagination={pagination}
                   paginationPageSize={paginationPageSize}
                   paginationPageSizeSelector={paginationPageSizeSelector}
+                  domLayout="autoHeight"
+                  suppressHorizontalScroll={true}
+                  
                 />
               </div>
             </div>
@@ -354,19 +374,27 @@ const User = () => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={closeModal}>
-              Cancel
-            </Button>
             {userData.userId === 0 ? (
-              <Button variant="primary" onClick={addUser}>
-                Add
-              </Button>
+              <>
+                <Button variant="danger" onClick={resetModal}>
+                  Reset
+                </Button>
+                <Button variant="primary" onClick={addUser}>
+                  Add
+                </Button>
+              </>
             ) : (
-              <Button variant="primary" onClick={editUser}>
-                Update
-              </Button>
+              <>
+                <Button variant="danger" onClick={closeModal}>
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={editUser}>
+                  Update
+                </Button>
+              </>
             )}
-          </Modal.Footer>
+</Modal.Footer>
+
         </Modal>
       </div>
     </div>
