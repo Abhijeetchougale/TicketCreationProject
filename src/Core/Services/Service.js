@@ -1,6 +1,6 @@
 import { COMMON_URL } from '../Constant/Constant';
 import axios from "axios";
-
+import { UPDATE_USER } from '../Constant/Constant';
 const getData = async (endpoint) => {
   try {
     const result = await axios.get(`${COMMON_URL}${endpoint}`);
@@ -20,14 +20,21 @@ const postData = async (endpoint, obj) => {
 };
 
 const deleteData = async (endpoint, id) => {
-  debugger;
   try {
-    debugger;
     const result = await axios.get(`${COMMON_URL}${endpoint}${id}`);
     return result.data;
   } catch (error) {
     alert(error);
   }
 };
+const updateData = async () => {
+  try {
+    const result = await axios.get(`${COMMON_URL}${UPDATE_USER}`);
+    return result.data.data;
+  } catch (error) {
+    alert(error);
+  }
+};
 
-export { getData, postData, deleteData };
+
+export { getData, postData, deleteData,updateData };
