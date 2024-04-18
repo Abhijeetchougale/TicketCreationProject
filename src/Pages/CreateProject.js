@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 // import React, { useEffect, useState } from 'react';
 // import { Modal } from 'react-bootstrap';
 // import { VALIDATIONERROR } from '../Core/Constant/Constant';
 // import { getData, postData, updateData, deleteData } from '../Core/Services/Service';
 // import { PencilSquare, Trash } from 'react-bootstrap-icons';
+=======
+import React, { useEffect, useState } from 'react';
+import { Modal } from 'react-bootstrap';
+import { VALIDATIONERROR } from '../Core/Constant/Constant';
+import { getData, postData, updateData, deleteData } from '../Core/Services/Service';
+import { PencilSquare, Trash,Plus } from 'react-bootstrap-icons';
+>>>>>>> 1b2b9c9eb8a74a4a81525fd084160e06eafcd9b2
 
 // const CreateProject = () => {
 //     const getURL_END = 'GetAllProject';
@@ -90,6 +98,7 @@
 
 
 
+<<<<<<< HEAD
 //     return (
 //         <div>
 //             <div className="container-fluid">
@@ -149,6 +158,67 @@
 //                                 </table>
 //                             </div>
 //                         </div>
+=======
+    return (
+        <div>
+            <div className="container-fluid">
+                <div className='row mt-3'>
+                    <div className='col-md-1'></div>
+                    <div className='col-md-10'>
+                        <div className='card bg-light'>
+                            <div className='card-header bg-info'>
+                                <div className="row mt-2">
+                                    <div className="col-md-10 text-center ">
+                                        <h4 >Project List</h4>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <button className='btn btn-success' onClick={handleShow} ><Plus/></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='card-body'>
+                                <table className='table table-bordered text-center'>
+                                    <thead>
+                                        <tr>
+                                            <th>Sr.No</th>
+                                            <th>Short Name</th>
+                                            <th>Full Name</th>
+                                            <th>Start Date</th>
+                                            <th>Team Size</th>
+                                            <th>Technology Stack</th>
+                                            <th>Created Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            getAllProjectList.map((project, index) => {
+                                                return (
+                                                    <tr>
+                                                        <td>{index + 1}</td>
+                                                        <td>{project.shortName}</td>
+                                                        <td>{project.fullName}</td>
+                                                        <td>{project.startDate}</td>
+                                                        <td>{project.teamSize}</td>
+                                                        <td>{project.technologyStack}</td>
+                                                        <td>{project.createdDate}</td>
+                                                        <td>
+                                                            <button className='btn btn-sm btn-success m-2' onClick={() => { onEdit(project) }}>
+                                                                <PencilSquare/>
+                                                            </button>
+                                                            <button className='btn btn-sm btn-danger' onClick={() => { onDeleteAdvance(project.projectId) }}>
+                                                                <Trash/>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+>>>>>>> 1b2b9c9eb8a74a4a81525fd084160e06eafcd9b2
 
 //                     </div>
 
