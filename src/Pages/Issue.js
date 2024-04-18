@@ -1,223 +1,417 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Table, Button, Card, Row, Col, Modal } from "react-bootstrap";
+import { deleteData, getData, postData } from '../services/Service';
+import '../services/Main.css'
 import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { Button, Modal, Form } from 'react-bootstrap';
-// import { FaEdit, FaTrashAlt } from 'react-icons/fa'; 
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
-const Issue = () => {
-    const [rowData, setRowData] = useState([]);
-    const [newIssue, setNewIssue] = useState({
-        "issueId": 0,
-        "issueType": 0,
-        "createdDate": new Date().toString(),
-        "projectId": 0,
-        "statusId": 0,
-        "assignedTo": 0,
-        "summary": "",
-        "description": "",
-        "reporter": 0,
-        "timeSpan": "",
-        "parentId": 0,
-        "priority": "",
-        "storyPoint": 0,
-        "issueGuid": ""
-    }
-    );
-    const [showModal, setShowModal] = useState(false);
-    const [validationerror, setvalidationerror] = useState(false);
-
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewIssue(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+const Issues = () => {
+    const [issueList, setissueList] = useState([]);
+    const [issueObj, setissueObj] = useState({
+        issueId: 0,
+        issueType: 0,
+        createdDate: "",
+        projectId: 0,
+        statusId: 0,
+        assignedTo: 0,
+        summary: "",
+        description: "",
+        reporter: 0,
+        timeSpan: "",
+        parentId: 0,
+        priority: "",
+        storyPoint: 0,
+        issueGuid: ""
+    })
+    const [projectList, setprojectList] = useState([]);
+    const [statusList, setstatusList] = useState([]);
+    const [UserList, setUserList] = useState([]);
+    const [issueTypeList, setissueTypeList] = useState([]);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => 
+    {
+        setShow(true);
+        resetIssueObj();
     };
+    const getIssueList = async () => {
+        getData('GetAllIssues').then(result => {
+            try {
+                if (result != undefined) {
+                    setissueList(result);
+                }
+                else {
+                    alert('Something went wrong');
+                }
+            } catch (error) {
+                alert(error);
+            }
 
+        })
+    }
+    const getAllProject = async () => {
+        getData('GetAllProject').then(result => {
+            try {
 
-    const cellRendererFramework = (props) => {
+                if (result != undefined) {
+                    setprojectList(result);
+                }
+            } catch (error) {
+
+            }
+        })
+    }
+    const getAllUsers = async () => {
+        getData('GetAllUsers').then(result => {
+            try {
+                if (result != undefined) {
+                    setUserList(result);
+                }
+                else {
+                    alert(result.message)
+                }
+            } catch (error) {
+                alert(error);
+            }
+
+        })
+    }
+    const getAllStatus = async () => {
+        getData('GetAllIssueStatus').then(result => {
+            try {
+                if (result != undefined) {
+                    setstatusList(result);
+                }
+                else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                alert(error);
+            }
+
+        })
+    }
+    const getIssueType = async () => {
+        try {
+            getData('GetAllIssueTypes').then(result => {
+                if (result != undefined) {
+                    setissueTypeList(result);
+                }
+                else {
+                    alert('in issue list');
+                }
+            })
+        } catch (error) {
+            alert(error);
+        }
+
+    }
+    useEffect(() => {
+
+        getIssueList();
+        getAllProject();
+        getAllUsers();
+        getAllStatus();
+        getIssueType();
+    }, []);
+    const CustomButtonComponent = (props) => {
         return (
             <React.Fragment>
-                <button className='btn btn-sm btn-success' onClick={() => handleEdit(props.data)} ><FontAwesomeIcon icon={faEdit} /></button>
-                <button className='btn btn-sm btn-danger' onClick={() => handleDelete(props.data)} ><FontAwesomeIcon icon={faTrash} /></button>
+                <button className='btn btn-sm btn-success' onClick={() => onEdit(props.data)} ><FontAwesomeIcon icon={faEdit} /></button>
+                <button className='btn btn-sm btn-danger' onClick={() => onDelete(props.data)} ><FontAwesomeIcon icon={faTrash} /></button>
             </React.Fragment>
         );
     };
-
-    useEffect(() => {
-        fetchIssues();
-    }, []);
-
-    const fetchIssues = () => {
-        axios.get('https://onlinetestapi.gerasim.in/api/Glitch/GetAllIssues')
-            .then(response => {
-                setRowData(response.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching issues:', error);
-            });
-    };
-
-    const handleCreate = () => {
-        if(!setvalidationerror)
-        axios.post('https://onlinetestapi.gerasim.in/api/Glitch/CreateIssue', newIssue)
-            .then(response => {
-                alert('Issue created successfully:', response.data);
-                fetchIssues();
-                setShowModal(false);
-                clearForm();
-            })
-            .catch(error => {
-                console.error('Error creating issue:', error);
-            });
-            
-    };
-
-
-    const handleEdit = (issueData) => {
-        setNewIssue(issueData);
-        setShowModal(true);
-        fetchIssues();
+    const onEdit = (issueData) => {
+        const formattedDate = issueData.createdDate.split('T')[0];
+        setissueObj({
+            ...issueData,
+            createdDate: formattedDate
+        });
+        setShow(true);
+        getIssueList();
     }
-
-    const handleDelete = (issue) => {
-        axios.get(`https://onlinetestapi.gerasim.in/api/Glitch/DeleteIssueById?id=${issue.issueId}`)
-            .then(response => {
-                alert('Issue deleted successfully:', response.data);
-                fetchIssues();
+    const onDelete = (issueData) => {
+        try {
+            debugger
+            deleteData('DeleteIssueById?id=', issueData.issueId).then(result => {
+                debugger
+                if (result != undefined) {
+                    alert(result.message);
+                    getIssueList();
+                }
             })
-            .catch(error => {
-                console.error('Error deleting issue:', error);
-            });
-    };
+        } catch (error) {
+            alert(error);
+        }
 
-    const handleUpdate = () => {
-        axios.post('https://onlinetestapi.gerasim.in/api/Glitch/UpdateIssue', newIssue)
-            .then(response => {
-                alert('Issue created successfully:', response.data);
-                fetchIssues();
-                clearForm();
+    }
+    const [colDefs, setColDefs] = useState([
+        { field: "issueTypeName" },
+        { field: "status" },
+        { field: "assignedTo" },
+        { field: "summary" },
+        { field: "reporter" },
+        { field: "Action", cellRenderer: CustomButtonComponent }
+
+    ]);
+    const handleChange = (event, key) => {
+
+        setissueObj((prevObj) => ({ ...prevObj, [key]: event.target.value }));
+    }
+    const saveIssue = () => {
+
+        try {
+            postData('CreateIssue', issueObj).then(result => {
+                if (result != undefined) {
+                    alert(result.message);
+                    getIssueList();
+                }
             })
-            .catch(error => {
-                console.error('Error creating issue:', error);
-            });
-    };
-
-    const clearForm = () => {
-        setNewIssue({
+        } catch (error) {
+            alert(error);
+        }
+        resetIssueObj();
+        setShow(false);
+        
+    }
+    const UpdateIssue = () => {
+        try {
+            postData('UpdateIssue', issueObj).then(result => {
+                if (result != undefined) {
+                    alert(result.message);
+                    getIssueList();
+                }
+            })
+        } catch (error) {
+            alert(error);
+        }
+        resetIssueObj();
+        setShow(false);
+    }
+    const resetIssueObj = () => {
+        setissueObj({
+            issueId: 0,
             issueType: 0,
-            createdDate: new Date().toISOString(),
+            createdDate: "",
             projectId: 0,
             statusId: 0,
             assignedTo: 0,
-            summary: '',
-            description: '',
+            summary: "",
+            description: "",
             reporter: 0,
-            timeSpan: '',
+            timeSpan: "",
             parentId: 0,
-            priority: '',
+            priority: "",
             storyPoint: 0,
-            issueGuid: ''
+            issueGuid: ""
         });
     };
-
+    
    
-    const columnDefs = [
-        
-        { headerName: 'Issue Name', field: 'issueTypeName' },
-        { headerName: 'Created Date', field: 'createdDate' },     
-        { headerName: 'Summary', field: 'summary' },
-        { headerName: 'Description', field: 'description' },       
-        { headerName: 'Time Span', field: 'timeSpan' },
-        { headerName: 'Priority', field: 'priority' },
-        { headerName: 'Issue Guid', field: 'issueGuid' },
-        { headerName: 'Actions', cellRenderer: cellRendererFramework }
-    ];
-
+    
     return (
-        <div>
-           
-            <div className='d-flex justify-content-between'>
-            <h2 className='text-center'>Create New Issue</h2>
-                <Button variant="primary" onClick={() => setShowModal(true)}><FontAwesomeIcon icon={faPlus} />Create New</Button>
+        <div className='main-container'>
+            <div className='mt-10'>
+                <Card>
+                    <Card.Header className="d-flex justify-content-between align-items-center">
+                        <h4>Issue List</h4>
+                        <Button onClick={handleShow}>Add New</Button>
+                    </Card.Header>
+                    <Card.Body>
+                        <div
+                            className="ag-theme-quartz" style={{ height: 500, width: '100%' }}
+                            >
+                            <AgGridReact
+                                rowData={issueList}
+                                columnDefs={colDefs}
+                            />
+                        </div>
+                    </Card.Body>
+                    <Card.Footer>
+
+                    </Card.Footer>
+                </Card>
+                <div className='col-md-12'>
+                    <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton className=' custom-card-header'>
+                            <Modal.Title>
+                                {
+                                    issueObj.issueId == 0 && <h4>Add Issue</h4>
+                                }
+                                {
+                                    issueObj.issueId != 0 && <h4>Update Issue</h4>
+                                }</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+
+                            <div >
+                                <div >
+                                    <div className='card-body'>
+                                        <div className='row'>
+                                            <div className='col-md-6'>
+                                                <label>Type</label>
+                                                <select className='form-select' value={issueObj.issueType} onChange={(event) => handleChange(event, 'issueType')}>
+                                                    <option>Select Type</option>
+                                                    {
+                                                        issueTypeList.map((issueType, index) => {
+                                                            return (
+                                                                <option key={issueType.issueTypeId} value={issueType.issueTypeId}>{issueType.issueType}</option>
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Created Date </label>
+                                                <input type='Date' className='form-control' value={issueObj.createdDate} placeholder='Select date' onChange={(event) => handleChange(event, 'createdDate')}></input>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className='col-md-6'>
+                                                <label>Project</label>
+                                                <select className='form-select' value={issueObj.projectId} onChange={(event) => handleChange(event, 'projectId')}>
+                                                    <option>Select Project</option>
+                                                    {
+                                                        projectList.map((project, index) => {
+                                                            return (
+                                                                <option key={project.projectId} value={project.projectId}>{project.fullName}</option>
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Status</label>
+                                                <select className='form-select' value={issueObj.statusId} onChange={(event) => handleChange(event, 'statusId')}>
+                                                    <option>Select Status</option>
+                                                    {
+                                                        statusList.map((status, index) => {
+                                                            return (
+                                                                <option key={status.statusId} value={status.statusId}>{status.status}</option>
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className='row'>
+                                            <div className='col-md-6'>
+                                                <label>Assigned To</label>
+                                                <select className='form-select' value={issueObj.assignedTo} onChange={(event) => handleChange(event, 'assignedTo')}>
+                                                    <option>Assigned To</option>
+                                                    {
+                                                        UserList.map((user, index) => {
+                                                            return (
+                                                                <option key={user.userId} value={user.userId}>{user.fullName}</option>
+
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Reporter</label>
+                                                <select className='form-select' value={issueObj.reporter} onChange={(event) => handleChange(event, 'reporter')}>
+                                                    <option>Report To</option>
+                                                    {
+                                                        UserList.map((user, index) => {
+                                                            return (
+                                                                <option key={user.userId} value={user.userId}>{user.fullName}</option>
+
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+                                        <div className='row'>
+                                            <div className='col-md-6'>
+                                                <label>Summary</label>
+                                                <input type="text" className='form-control' value={issueObj.summary} placeholder='Enter Summery' onChange={(event) => handleChange(event, 'summary')}></input>
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Time Span</label>
+                                                <input type="text" className='form-control' value={issueObj.timeSpan} placeholder='Enter Time Span' onChange={(event) => handleChange(event, 'timeSpan')} ></input>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div className='row'>
+
+                                            <div className='col-md-6'>
+                                                <label>Parent</label>
+                                                <select className='form-select' value={issueObj.parentId} onChange={(event) => handleChange(event, 'parentId')}>
+                                                    <option>Report To</option>
+                                                    {
+                                                        UserList.map((user, index) => {
+                                                            return (
+                                                                <option key={user.userId} value={user.userId}>{user.fullName}</option>
+
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Priority</label>
+                                                <input type="text" className='form-control' value={issueObj.priority} placeholder='Enter Priority' onChange={(event) => handleChange(event, 'priority')}></input>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+
+                                            <div className='col-md-6'>
+                                                <label>Story Point</label>
+                                                <input type="text" className='form-control' value={issueObj.storyPoint} placeholder='Enter Story Point' onChange={(event) => handleChange(event, 'storyPoint')}></input>
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Issue Guide</label>
+                                                <input type="text" className='form-control' value={issueObj.issueGuid} placeholder='Enter Issue Guid' onChange={(event) => handleChange(event, 'issueGuid')}></input>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className='col-md-12'>
+                                                <label>Description</label>
+                                                <textarea className='form-control' value={issueObj.description} onChange={(event) => handleChange(event, 'description')}></textarea>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer style={{ display: 'flex', justifyContent: 'center' }}>
+                            <div>
+                                {
+                                    issueObj.issueId == 0 &&
+                                    <Button variant='success' onClick={saveIssue}>Add</Button>
+
+
+                                }
+                                {
+                                    issueObj.issueId != 0 &&
+                                    <Button variant='success' onClick={UpdateIssue}>Update</Button>
+
+                                }
+                                <Button variant='danger' className='m-2' onClick={() => setShow(false)}>Cancel</Button>
+
+                            </div>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
             </div>
-            <div className="ag-theme-alpine" style={{ height: '500px', width: '100%' }}>
-                <AgGridReact
-                    rowData={rowData}
-                    columnDefs={columnDefs}
-                    pagination={true}
-                    paginationPageSize={10}
-                    // const paginationPageSizeSelector = {[200, 500, 1000]}
 
-                    onGridReady={(params) => params.api.sizeColumnsToFit()}
-                />
-            </div>
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        {
-                            newIssue.issueId == 0 && <h4>Add Issue Type</h4>
-                        }
-                        {
-                            newIssue.issueId != 0 && <h4>Update Issue Type</h4>
-                        }
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="issueType">
-                            <Form.Label>Issue Type</Form.Label>
-                            <Form.Control type="number" name="IssueType" value={newIssue.issueType} onChange={handleInputChange} />
-                            {
-                               validationerror && newIssue.issueType ==''&& <label className='danger'>This Is Required</label>
-                            }
-                        </Form.Group>
-                        <Form.Group controlId="summary">
-                            <Form.Label>Summary</Form.Label>
-                            <Form.Control type="text" name="Summary" value={newIssue.summary} onChange={handleInputChange} />
-                            {
-                               validationerror && newIssue.summary ==''&& <label className='danger'>This Is Required</label>
-                            }
-                        </Form.Group>
-                        <Form.Group controlId="description">
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control as="textarea" rows={3} name="Description" value={newIssue.description} onChange={handleInputChange} />
-                            {
-                               validationerror && newIssue.description ==''&& <label className='danger'>This Is Required</label>
-                            }
-                        </Form.Group>
-
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    {
-                        newIssue.issueId === 0 &&
-                        <Button variant='success' onClick={handleCreate}>Add</Button>
-
-
-                    }
-                    {
-                        newIssue.issueId !== 0 &&
-                        <Button variant='success' onClick={handleUpdate}>Update</Button>
-
-                    }
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>
         </div>
+
     );
 };
 
-export default Issue;
-
-// { headerName: 'Issue ID', field: 'issueId' },
-   // { headerName: 'Project ID', field: 'projectId' },
-        // { headerName: 'Status ID', field: 'statusId' },
-        // { headerName: 'Assigned To', field: 'assignedTo' },
-         // { headerName: 'Reporter', field: 'reporter' },
-             // { headerName: 'Parent ID', field: 'parentId' },
-                     // { headerName: 'Story Point', field: 'storyPoint' },
+export default Issues;
