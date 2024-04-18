@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import { VALIDATION_REQUIRED } from '../Core/Constant/Constant';
+import { VALIDATION_REQUIRED } from '../Core/constant/Constant';
 import { getData, postData, updateData, deleteData } from '../Core/Services/Service';
 import { AgGridReact } from 'ag-grid-react'; // AG Grid Component
 import Button from 'react-bootstrap/Button';
